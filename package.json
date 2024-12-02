@@ -3,6 +3,9 @@
   "version": "1.0.3",
   "description": "A package to render tables in CLI",
   "main": "index.js",
+  "bin": {
+    "next-list": "./index.js"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
