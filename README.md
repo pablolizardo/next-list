@@ -1,6 +1,6 @@
 # next-list for Next.js 🗺️
 
-A command-line utility to explore and visualize all routes in your Next.js application, including both pages and API routes.
+A command-line utility to explore and visualize all routes in your Next.js application, including both pages and API routes. This tool aims to simplify debugging when working in the Next.js app directory and to provide clear insights into which routes are being rendered, both for pages and API routes. Inspired by the `php artisan route:list` command.
 
 ## Features ✨
 
