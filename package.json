@@ -1,6 +1,6 @@
 {
   "name": "next-list",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A package to render tables in CLI",
   "main": "index.js",
   "bin": {
