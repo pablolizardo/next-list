@@ -18,10 +18,18 @@ npm install next-list
 
 ## Usage 🚀
 
-Simply run the command in your Next.js project root:
+To use `next-list`, you can run the provided npm script from your project root:
 
 ```bash
-npx next-list
+npm run list
+```
+
+This command is configured in your `package.json` under the scripts section. Here's how you should set it up:
+
+```json
+"scripts": {
+  "list": "next-list"
+}
 ```
 
 ### Output Example 📄

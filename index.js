@@ -77,7 +77,7 @@ function formatMethod(method) {
 function renderTable(tableData) {
     const table = new Table({
         head: ['Method', 'Function Name', 'Route', 'Full URL'],
-        colWidths: [15, 30, 50, 80],
+        colWidths: [12, 28, 48, 60],
         chars: { 'mid': '', 'left-mid': '', 'mid-mid': '', 'right-mid': '' },
         style: {
             head: [], // Personaliza los estilos de la cabecera si lo deseas
