@@ -12,7 +12,7 @@ A command-line utility to explore and visualize all routes in your Next.js appli
 
 ## Screenshots 📸
 
-![next-list CLI output](https://raw.githubusercontent.com/pablolizardo/next-list/main/main/screenshot.png)
+![next-list CLI output](https://imgur.com/a/3ZzqjUl)
 
 ## Installation 📦
 
@@ -22,10 +22,10 @@ npm install next-list
 
 ## Usage 🚀
 
-To use `next-list`, you can run the provided npm script from your project root:
+To use `next-list`, you can run the provided npm script from your project root with optional arguments to specify what routes to list:
 
 ```bash
-npm run list
+npm run list [pages|api]
 ```
 
 This command is configured in your `package.json` under the scripts section. Here's how you should set it up:
@@ -36,11 +36,13 @@ This command is configured in your `package.json` under the scripts section. Her
 }
 ```
 
+If no argument is provided, `next-list` will list both page and API routes. You can specify `pages` to list only page routes or `api` to list only API routes.
+
 ### Output Example 📄
 
-The utility will generate two tables:
+The utility will generate tables based on the specified argument:
 
-1. **Page Routes:**
+1. **Page Routes (if `pages` is specified or no argument is provided):**
 
 ```
 | Method | Function Name | Route | Full URL |
@@ -50,7 +52,7 @@ The utility will generate two tables:
 | GET | UserProfile | /users/[id] | https://localhost:3000/users/[id] |
 ```
 
-2. **API Routes:**
+2. **API Routes (if `api` is specified or no argument is provided):**
 
 ```
 | Method | Function Name | Route | Full URL |

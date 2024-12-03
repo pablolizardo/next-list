@@ -4,7 +4,9 @@ const path = require('path');
 const chalk = require('chalk');
 const Table = require('cli-table3');
 
-const appDirectory = path.join(process.cwd(), 'src/app');
+const appDirectory = fs.existsSync(path.join(process.cwd(), 'app'))
+    ? path.join(process.cwd(), 'app')
+    : path.join(process.cwd(), 'src/app');
 
 function listRoutes(dir, baseRoute = '') {
     let table = [];
@@ -70,7 +72,7 @@ function formatMethod(method) {
         case 'PUT':
             return chalk.blue(method);
         default:
-            return method; // Sin color si no es uno de los anteriores
+            return method;
     }
 }
 
@@ -80,7 +82,7 @@ function renderTable(tableData) {
         colWidths: [12, 28, 48, 60],
         chars: { 'mid': '', 'left-mid': '', 'mid-mid': '', 'right-mid': '' },
         style: {
-            head: [], // Personaliza los estilos de la cabecera si lo deseas
+            head: [],
             border: []
         }
     });
@@ -90,17 +92,23 @@ function renderTable(tableData) {
         const routeColored = row[2]
             .replace(/\[(\w+)\]/g, chalk.yellow('[$1]'))
             .replace(/\((\w+)\)/g, chalk.blue('($1)'));
-        const fullUrl = `https://localhost:3000${row[2]}`;
+        const baseUrl = process.env.BASE_URL || process.env.APP_URL || 'https://localhost:3000';
+        const fullUrl = `${baseUrl}${row[2]}`;
         table.push([methodColored, row[1], routeColored, fullUrl]);
     });
 
     console.log(table.toString());
 }
 
-console.log('Listing page routes in src/app:');
-const routesTable = listRoutes(appDirectory);
-renderTable(routesTable);
+console.log('Listing routes in src/app:');
+const arg = process.argv[2];
 
-console.log('Listing API routes in src/app:');
-const apiRoutesTable = listApiRoutes(appDirectory);
-renderTable(apiRoutesTable);
+if (!arg || arg === 'pages') {
+    const routesTable = listRoutes(appDirectory);
+    renderTable(routesTable);
+}
+
+if (!arg || arg === 'api') {
+    const apiRoutesTable = listApiRoutes(appDirectory);
+    renderTable(apiRoutesTable);
+}
