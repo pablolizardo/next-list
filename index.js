@@ -1,8 +1,8 @@
 #!/usr/bin/env node
-import fs from 'fs';
-import path from 'path';
-import chalk from 'chalk';
-import Table from 'cli-table3';
+const fs = require('fs');
+const path = require('path');
+const chalk = require('chalk');
+const Table = require('cli-table3');
 
 const appDirectory = path.join(process.cwd(), 'src/app');
 
