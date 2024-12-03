@@ -10,6 +10,10 @@ A command-line utility to explore and visualize all routes in your Next.js appli
 - 🔍 Supports dynamic routes (`[param]`) and optional segments (`(param)`)
 - 📊 Beautiful CLI table output with full URLs
 
+## Screenshots 📸
+
+![next-list CLI output](https://raw.githubusercontent.com/pablolizardo/next-list/main/screenshot.png)
+
 ## Installation 📦
 
 ```bash
