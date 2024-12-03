@@ -12,7 +12,7 @@ A command-line utility to explore and visualize all routes in your Next.js appli
 
 ## Screenshots 📸
 
-![next-list CLI output](https://raw.githubusercontent.com/pablolizardo/next-list/main/screenshot.png)
+![next-list CLI output](https://raw.githubusercontent.com/pablolizardo/next-list/main/main/screenshot.png)
 
 ## Installation 📦
 
