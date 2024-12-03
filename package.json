@@ -1,27 +1,48 @@
 {
   "name": "next-list",
   "version": "1.0.11",
-  "description": "A package to render tables in CLI",
+  "description": "A package to render tables in CLI for Next.js routes visualization.",
   "main": "index.js",
   "bin": {
     "next-list": "./index.js"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/pablolizardo/next-list.git"
   },
   "keywords": [
+    "next.js",
+    "next",
+    "nextjs",
+    "routes",
     "cli",
-    "table",
-    "render"
+    "tool",
+    "visualization",
+    "debugging",
+    "api",
+    "pages",
+    "route visualization",
+    "development tools"
   ],
-  "author": "Pablo Lizardo",
+  "author": {
+    "name": "Pablo Lizardo",
+    "email": "info@pablolizardo.dev",
+    "url": "https://www.pablolizardo.dev"
+  },
   "license": "ISC",
   "dependencies": {
     "chalk": "^4.0.0",
     "cli-table3": "^0.6.0"
-  }
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "bugs": {
+    "url": "https://github.com/pablolizardo/next-list/issues"
+  },
+  "homepage": "https://github.com/pablolizardo/next-list#readme"
 }
