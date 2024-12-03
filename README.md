@@ -1,5 +1,8 @@
 # next-list for Next.js 🗺️
 
+![npm](https://img.shields.io/npm/v/next-list)
+![License](https://img.shields.io/npm/l/next-list)
+
 A command-line utility to explore and visualize all routes in your Next.js application, including both pages and API routes. This tool aims to simplify debugging when working in the Next.js app directory and to provide clear insights into which routes are being rendered, both for pages and API routes. Inspired by the `php artisan route:list` command.
 
 ## Features ✨
@@ -36,9 +39,7 @@ This command is configured in your `package.json` under the scripts section. Her
 }
 ```
 
-If no argument is provided, `next-list` will list both page and API routes. You can specify `pages` to list only page routes or `api` to list only API routes.
-
-### Output Example 📄
+## Output Example 📄
 
 The utility will generate tables based on the specified argument:
 
@@ -72,14 +73,11 @@ The utility will generate tables based on the specified argument:
 - Dynamic parameters `[param]` - Yellow
 - Optional segments `(param)` - Blue
 
-## Requirements 📋
-
-- Node.js >= 14.x
-- Next.js project using the App Router
-
 ## Contributing 🤝
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions are welcome! If you have suggestions or improvements, please fork the repository and submit a pull request. For major changes, please open an issue first to discuss what you would like to change.
+
+Please make sure to update tests as appropriate.
 
 ## License 📄
 
