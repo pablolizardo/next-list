@@ -12,10 +12,16 @@ A command-line utility to explore and visualize all routes in your Next.js appli
 - 📝 Shows the exported function names for each route
 - 🔍 Supports dynamic routes (`[param]`) and optional segments (`(param)`)
 - 📊 Beautiful CLI table output with full URLs
+- 🔄 Detects and displays metadata exports
+- ⚡ Identifies client/server components
+- 🔒 Shows server actions usage
+- ⏱️ Displays revalidation settings
+- 💾 Shows fetch cache configurations
+- 🔄 Dynamic route configurations
 
 ## Screenshots 📸
 
-![next-list CLI output](https://i.postimg.cc/J0VNxd4y/Screenshot-2024-12-02-at-9-20-43-PM.png)
+![next-list CLI output](https://i.postimg.cc/pX7bq9yF/Screenshot-2024-12-04-at-1-27-32-AM.png)
 
 ## Installation 📦
 
@@ -25,53 +31,60 @@ npm install next-list
 
 ## Usage 🚀
 
-To use `next-list`, you can run the provided npm script from your project root with optional arguments to specify what routes to list:
+To use `next-list`, you can run the provided npm script from your project root with optional arguments:
 
 ```bash
-npm run list [pages|api]
+npm run list [pages|api] [--full|-f]
 ```
 
-This command is configured in your `package.json` under the scripts section. Here's how you should set it up:
+Options:
 
-```json
-"scripts": {
-  "list": "next-list"
-}
-```
+- `pages`: List only page routes
+- `api`: List only API routes
+- `--full` or `-f`: Show full URLs including base URL
 
 ## Output Example 📄
 
-The utility will generate tables based on the specified argument:
-
-1. **Page Routes (if `pages` is specified or no argument is provided):**
+1. **Page Routes Table:**
 
 ```
-| Method | Function Name | Route | Full URL |
-|--------|--------------|-------|-----------|
-| GET | HomePage | / | https://localhost:3000/ |
-| GET | AboutPage | /about | https://localhost:3000/about |
-| GET | UserProfile | /users/[id] | https://localhost:3000/users/[id] |
+| Function Name | Route | Type | Metadata | Server Action | Dynamic | Revalidate | FetchCache |
+|--------------|-------|------|----------|---------------|---------|------------|------------|
+| HomePage     | /     | ⇢ client | ✓ | × | - | 30s | force-cache |
+| AboutPage    | /about| ⇠ server | ✓ | ✓ | auto | - | - |
 ```
 
-2. **API Routes (if `api` is specified or no argument is provided):**
+2. **API Routes Table:**
 
 ```
-| Method | Function Name | Route | Full URL |
-|--------|--------------|-------|-----------|
-| GET | handler | /api/users/route | https://localhost:3000/api/users |
-| POST | createUser | /api/users/route | https://localhost:3000/api/users |
-| DELETE | deleteUser | /api/users/[id]/route | https://localhost:3000/api/users/[id] |
+| Method | Route |
+|--------|-------|
+| GET    | /api/users |
+| POST   | /api/users |
+| DELETE | /api/users/[id] |
 ```
 
 ## Color Coding 🎨
 
+### Methods
+
 - 🟢 GET - Green
-- 🟡 POST - Yellow
+- 🔵 POST - Blue
 - 🔴 DELETE - Red
-- 🔵 PUT - Blue
 - ⚪ HEAD - Gray
-- Dynamic parameters `[param]` - Yellow
-- Optional segments `(param)` - Blue
+- 🟣 PUT - Violet
+
+### Components & Features
+
+- 🔴 Client Components - Red "⇢ use client"
+- ⚪ Server Components - Gray "⇠ server"
+- 💛 Dynamic Parameters - Yellow `[param]`
+- 🔵 Optional Segments - Blue `(param)`
+- 💚 Metadata - Green checkmark
+- 🔵 Server Actions - Blue checkmark
+- 💛 Dynamic Config - Yellow text
+- 🔷 Revalidation - Cyan text
+- 🟣 Fetch Cache - Magenta text
 
 ## Contributing 🤝
 
