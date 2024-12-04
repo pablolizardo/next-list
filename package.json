@@ -1,6 +1,6 @@
 {
   "name": "next-list",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "A package to render tables in CLI for Next.js routes visualization.",
   "main": "index.js",
   "bin": {
