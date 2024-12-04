@@ -28,21 +28,21 @@ A command-line utility to explore and visualize all routes in your Next.js appli
 ### Option 1: Run directly with npx (no installation required)
 
 ```bash
-npx next-list [pages|api] [--full|-f]
+npx next-list [pages|api]
 ```
 
 ### Option 2: Global installation
 
 ```bash
 npm install -g next-list
-next-list [pages|api] [--full|-f]
+next-list [pages|api]
 ```
 
 ### Option 3: Local installation
 
 ```bash
 npm install next-list
-npm run list [pages|api] [--full|-f]
+npm run list [pages|api]
 ```
 
 Options:
@@ -71,28 +71,6 @@ Options:
 | POST   | /api/users |
 | DELETE | /api/users/[id] |
 ```
-
-## Color Coding 🎨
-
-### Methods
-
-- 🟢 GET - Green
-- 🔵 POST - Blue
-- 🔴 DELETE - Red
-- ⚪ HEAD - Gray
-- 🟣 PUT - Violet
-
-### Components & Features
-
-- 🔴 Client Components - Red "⇢ use client"
-- ⚪ Server Components - Gray "⇠ server"
-- 💛 Dynamic Parameters - Yellow `[param]`
-- 🔵 Optional Segments - Blue `(param)`
-- 💚 Metadata - Green checkmark
-- 🔵 Server Actions - Blue checkmark
-- 💛 Dynamic Config - Yellow text
-- 🔷 Revalidation - Cyan text
-- 🟣 Fetch Cache - Magenta text
 
 ## Contributing 🤝
 

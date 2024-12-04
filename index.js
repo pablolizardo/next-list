@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 const fs = require('fs');
 const path = require('path');
-const colors = require('colors');
+const colors = require('./colors');
 const Table = require('cli-table3');
 
 const appDirectory = fs.existsSync(path.join(process.cwd(), 'app'))
@@ -187,3 +187,4 @@ if (!arg || arg === 'api') {
     const apiRoutesTable = listApiRoutes(appDirectory);
     renderTable(apiRoutesTable, 'api');
 }
+
