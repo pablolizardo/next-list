@@ -1,12 +1,51 @@
 #!/usr/bin/env node
 const fs = require('fs');
 const path = require('path');
-const chalk = require('chalk');
+const colors = require('colors');
 const Table = require('cli-table3');
 
 const appDirectory = fs.existsSync(path.join(process.cwd(), 'app'))
     ? path.join(process.cwd(), 'app')
     : path.join(process.cwd(), 'src/app');
+
+function hasMetadata(filePath) {
+    const fileContent = fs.readFileSync(filePath, 'utf8');
+    const metadataPatterns = [
+        'export const metadata',
+        'export async function generateMetadata',
+        'export function generateMetadata',
+        'export const generateMetadata',
+        'export let metadata',
+        'export var metadata',
+        'export const metadata:',
+        'export const generateMetadata:',
+    ];
+
+    return metadataPatterns.some(pattern => fileContent.includes(pattern));
+}
+
+function hasServerAction(filePath) {
+    const fileContent = fs.readFileSync(filePath, 'utf8');
+    return fileContent.includes('use server');
+}
+
+function extractDynamicValue(filePath) {
+    const fileContent = fs.readFileSync(filePath, 'utf8');
+    const match = fileContent.match(/export (?:const|let|var) dynamic\s*=\s*['"]([^'"]+)['"]/);
+    return match ? match[1] : '';
+}
+
+function extractRevalidateValue(filePath) {
+    const fileContent = fs.readFileSync(filePath, 'utf8');
+    const match = fileContent.match(/export (?:const|let|var) revalidate\s*=\s*(\d+)/);
+    return match ? match[1] : '';
+}
+
+function extractFetchCacheValue(filePath) {
+    const fileContent = fs.readFileSync(filePath, 'utf8');
+    const match = fileContent.match(/export (?:const|let|var) fetchCache\s*=\s*['"]([^'"]+)['"]/);
+    return match ? match[1] : '';
+}
 
 function listRoutes(dir, baseRoute = '') {
     let table = [];
@@ -17,7 +56,13 @@ function listRoutes(dir, baseRoute = '') {
         } else if (dirent.isFile() && dirent.name.endsWith('page.tsx')) {
             const route = `${baseRoute}/${dirent.name.replace(/page\.tsx$/, '')}`;
             const functionName = extractExportedFunction(fullPath);
-            table.push([chalk.green('GET'), functionName, route]);
+            const componentType = isClientComponent(fullPath) ? 'use client' : '';
+            const hasMetadataExport = hasMetadata(fullPath);
+            const hasServerActionDirective = hasServerAction(fullPath);
+            const dynamicValue = extractDynamicValue(fullPath);
+            const revalidateValue = extractRevalidateValue(fullPath);
+            const fetchCacheValue = extractFetchCacheValue(fullPath);
+            table.push([functionName, route, componentType, hasMetadataExport, hasServerActionDirective, dynamicValue, revalidateValue, fetchCacheValue]);
         }
     });
     return table;
@@ -62,42 +107,65 @@ function extractExportedFunction(filePath) {
 function formatMethod(method) {
     switch (method) {
         case 'GET':
-            return chalk.green(method);
+            return method.green;
         case 'POST':
-            return chalk.yellow(method);
+            return method.blue;
         case 'DELETE':
-            return chalk.red(method);
+            return method.red;
         case 'HEAD':
-            return chalk.gray(method);
+            return method.gray;
         case 'PUT':
-            return chalk.blue(method);
+            return method.violet;
         default:
             return method;
     }
 }
 
-function renderTable(tableData) {
+function renderTable(tableData, type = 'pages') {
+    const baseUrl = process.env.BASE_URL || process.env.APP_URL || 'https://localhost:3000';
+    const showFullPath = process.argv.includes('--full') || process.argv.includes('-f');
+
     const table = new Table({
-        head: ['Method', 'Function Name', 'Route', 'Full URL'],
-        colWidths: [12, 28, 48, 60],
-        chars: { 'mid': '', 'left-mid': '', 'mid-mid': '', 'right-mid': '' },
+        head: type === 'pages'
+            ? ['Function Name', 'Route', 'Type', 'Metadata', 'Server Action', 'Dynamic', 'Revalidate', 'FetchCache']
+            : ['Method', 'Route'],
+        colWidths: type === 'pages'
+            ? [22, 62, 14, 14, 14, 14, 14, 14]
+            : [12, 96],
         style: {
             head: [],
-            border: []
+            border: [],
+            compact: true
         }
     });
 
     tableData.forEach(row => {
-        const methodColored = formatMethod(row[0]);
-        const routeColored = row[2]
-            .replace(/\[(\w+)\]/g, chalk.yellow('[$1]'))
-            .replace(/\((\w+)\)/g, chalk.blue('($1)'));
-        const baseUrl = process.env.BASE_URL || process.env.APP_URL || 'https://localhost:3000';
-        const fullUrl = `${baseUrl}${row[2]}`;
-        table.push([methodColored, row[1], routeColored, fullUrl]);
+        if (type === 'pages') {
+            const route = row[1].replace(/\[(\w+)\]/g, '[$1]'.yellow)
+                .replace(/\((\w+)\)/g, '($1)'.blue);
+            const routeColored = showFullPath ? `${baseUrl.dim}${route}` : route;
+            const typeColored = row[2] === 'use client' ? '⇢ use client'.red : '⇠ server'.dim;
+            const metadataColored = row[3] ? '✓ metadata'.green : '×'.dim;
+            const serverActionColored = row[4] ? '✓ use server'.blue : '×'.dim;
+            const dynamicColored = row[5] ? row[5].yellow : '-'.dim;
+            const revalidateColored = row[6] ? `${row[6]}s`.cyan : '-'.dim;
+            const fetchCacheColored = row[7] ? row[7].magenta : '-'.dim;
+            table.push([row[0], routeColored, typeColored, metadataColored, serverActionColored, dynamicColored, revalidateColored, fetchCacheColored]);
+        } else {
+            const methodColored = formatMethod(row[0]);
+            const route = row[2].replace(/\[(\w+)\]/g, '[$1]'.yellow)
+                .replace(/\((\w+)\)/g, '($1)'.blue);
+            const routeColored = showFullPath ? `${baseUrl.dim}${route}` : route;
+            table.push([methodColored, routeColored]);
+        }
     });
 
     console.log(table.toString());
+}
+
+function isClientComponent(filePath) {
+    const fileContent = fs.readFileSync(filePath, 'utf8');
+    return fileContent.includes('use client');
 }
 
 console.log('Listing routes in src/app:');
@@ -105,10 +173,10 @@ const arg = process.argv[2];
 
 if (!arg || arg === 'pages') {
     const routesTable = listRoutes(appDirectory);
-    renderTable(routesTable);
+    renderTable(routesTable, 'pages');
 }
 
 if (!arg || arg === 'api') {
     const apiRoutesTable = listApiRoutes(appDirectory);
-    renderTable(apiRoutesTable);
+    renderTable(apiRoutesTable, 'api');
 }

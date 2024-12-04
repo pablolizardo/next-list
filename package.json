@@ -35,8 +35,8 @@
   },
   "license": "ISC",
   "dependencies": {
-    "chalk": "^4.0.0",
-    "cli-table3": "^0.6.0"
+    "cli-table3": "^0.6.0",
+    "colors": "^1.4.0"
   },
   "engines": {
     "node": ">=14.0.0"
