@@ -8,7 +8,12 @@ A command-line utility to explore and visualize all routes in your Next.js appli
 ## Features ✨
 
 - 📋 Lists all page routes and API routes in your Next.js app
-- 🎨 Color-coded HTTP methods for better visualization
+- 🎨 Color-coded route segments:
+  - 🟡 Dynamic segments `[param]` in yellow
+  - 🔵 Optional segments `(param)` in blue
+  - 🟣 Catch-all segments `[...param]` in magenta
+  - 🟠 Parallel routes `@folder` in orange
+  - 💗 Intercepting routes `(.)` and `(..)` in pink
 - 📝 Shows the exported function names for each route
 - 🔍 Supports dynamic routes (`[param]`) and optional segments (`(param)`)
 - 📊 Beautiful CLI table output with full URLs
@@ -21,11 +26,11 @@ A command-line utility to explore and visualize all routes in your Next.js appli
 
 ## Screenshots 📸
 
-![next-list CLI output](https://i.postimg.cc/pX7bq9yF/Screenshot-2024-12-04-at-1-27-32-AM.png)
+![next-list CLI output](https://i.postimg.cc/Yq2YtVgQ/Screenshot-2024-12-04-at-3-12-27-PM.png)
 
 ## Installation & Usage 📦
 
-### Option 1: Run directly with npx (no installation required)
+### Option 1: ✨ Run directly with npx (no installation required)
 
 ```bash
 npx next-list [pages|api]
@@ -56,20 +61,23 @@ Options:
 1. **Page Routes Table:**
 
 ```
-| Function Name | Route | Type | Metadata | Server Action | Dynamic | Revalidate | FetchCache |
-|--------------|-------|------|----------|---------------|---------|------------|------------|
-| HomePage     | /     | ⇢ client | ✓ | × | - | 30s | force-cache |
-| AboutPage    | /about| ⇠ server | ✓ | ✓ | auto | - | - |
+| Function Name | Route                    | Type      | Metadata | Server Action | Dynamic | Revalidate | FetchCache |
+|---------------|--------------------------|-----------|----------|---------------|---------|------------|------------|
+| HomePage      | /                        | ⇢ client  | ✓        | ×             | -       | 30s        | force-cache|
+| AboutPage     | /about                   | ⇠ server  | ✓        | ✓             | auto    | -          | -          |
+| UserProfile   | /users/[id]              | ⇢ client  | ✓        | ×             | -       | -          | -          |
+| Settings      | /@modal/settings         | ⇠ server  | ×        | ✓             | -       | -          | -          |
+| EditPhoto     | /photos/(.)edit          | ⇢ client  | ×        | ✓             | -       | -          | -          |
 ```
 
 2. **API Routes Table:**
 
 ```
-| Method | Route |
-|--------|-------|
-| GET    | /api/users |
-| POST   | /api/users |
-| DELETE | /api/users/[id] |
+| Method | Route                         |
+|--------|-------------------------------|
+| GET    | /api/users                    |
+| POST   | /api/users                    |
+| DELETE | /api/users/[id]               |
 ```
 
 ## Contributing 🤝

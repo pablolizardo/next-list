@@ -1,8 +1,39 @@
 #!/usr/bin/env node
 const fs = require('fs');
 const path = require('path');
-const colors = require('./colors');
 const Table = require('cli-table3');
+console.clear()
+
+const colorCodes = {
+    green: '\x1b[32m',
+    blue: '\x1b[34m',
+    red: '\x1b[31m',
+    gray: '\x1b[90m',
+    violet: '\x1b[35m',
+    yellow: '\x1b[33m',
+    bgYellow: '\x1b[43m',
+    purple: '\x1b[35m',
+    orange: '\x1b[38;5;208m',
+    magenta: '\x1b[35m',
+    pink: '\x1b[35m',
+    cyan: '\x1b[36m',
+    dim: '\x1b[2m'
+};
+
+Object.entries(colorCodes).forEach(([color, code]) => {
+    Object.defineProperty(String.prototype, color, {
+        get() {
+            return `${code}${this}\x1b[0m`;
+        }
+    });
+});
+
+Object.fromEntries(
+    Object.entries(colorCodes).map(([color, code]) => [
+        color,
+        (text) => `${code}${text}\x1b[0m`
+    ])
+);
 
 const appDirectory = fs.existsSync(path.join(process.cwd(), 'app'))
     ? path.join(process.cwd(), 'app')
@@ -54,6 +85,24 @@ function extractFetchCacheValue(filePath) {
     return match ? match[1] : '';
 }
 
+function hasParallelRoute(filePath) {
+    return filePath.includes('@');
+}
+
+function hasInterceptingRoute(filePath) {
+    return filePath.includes('(.)') || filePath.includes('(..)') || filePath.includes('(...)');
+}
+
+function hasLoadingFile(dirPath) {
+    const directory = path.dirname(dirPath);
+    return fs.existsSync(path.join(directory, 'loading.tsx'));
+}
+
+function hasErrorFile(dirPath) {
+    const directory = path.dirname(dirPath);
+    return fs.existsSync(path.join(directory, 'error.tsx'));
+}
+
 function listRoutes(dir, baseRoute = '') {
     let table = [];
     fs.readdirSync(dir, { withFileTypes: true }).forEach(dirent => {
@@ -69,7 +118,11 @@ function listRoutes(dir, baseRoute = '') {
             const dynamicValue = extractDynamicValue(fullPath);
             const revalidateValue = extractRevalidateValue(fullPath);
             const fetchCacheValue = extractFetchCacheValue(fullPath);
-            table.push([functionName, route, componentType, hasMetadataExport, hasServerActionDirective, dynamicValue, revalidateValue, fetchCacheValue]);
+            const isParallel = hasParallelRoute(fullPath);
+            const isIntercepting = hasInterceptingRoute(fullPath);
+            const _hasLoadingFile = hasLoadingFile(fullPath);
+            const _hasErrorFile = hasErrorFile(fullPath);
+            table.push([functionName, route, componentType, hasMetadataExport, hasServerActionDirective, dynamicValue, revalidateValue, fetchCacheValue, isParallel, isIntercepting, _hasLoadingFile, _hasErrorFile]);
         }
     });
     return table;
@@ -134,11 +187,9 @@ function renderTable(tableData, type = 'pages') {
 
     const table = new Table({
         head: type === 'pages'
-            ? ['Function Name', 'Route', 'Type', 'Metadata', 'Server Action', 'Dynamic', 'Revalidate', 'FetchCache']
+            ? ['Function', 'Route', 'Type', 'Metadata', 'Server Action', 'Dynamic', 'Revalidate', 'FetchCache', 'Parallel', 'Intercepting', 'Loading', 'Error']
             : ['Method', 'Route'],
-        colWidths: type === 'pages'
-            ? [22, 62, 14, 14, 14, 14, 14, 14]
-            : [12, 96],
+
         style: {
             head: [],
             border: [],
@@ -148,25 +199,34 @@ function renderTable(tableData, type = 'pages') {
 
     tableData.forEach(row => {
         if (type === 'pages') {
-            const route = row[1].replace(/\[(\w+)\]/g, '[$1]'.yellow)
-                .replace(/\((\w+)\)/g, '($1)'.blue);
+            const route = row[1]
+                .replace(/\[\.\.\.(\w+)\]/g, '[...$1]'.magenta)
+                .replace(/\[(\w+)\]/g, '[$1]'.yellow)
+                .replace(/\((\w+)\)/g, '($1)'.blue)
+                .replace(/\(\.\)/g, '(.)'.green)
+                .replace(/\(\.\.\)/g, '(..)'.green)
+                .replace(/@(\w+)/g, '@$1'.orange);
             const routeColored = showFullPath ? `${baseUrl.dim}${route}` : route;
             const typeColored = row[2] === 'use client' ? '⇢ use client'.red : '⇠ server'.dim;
             const metadataColored = row[3] ? '✓ metadata'.green : '×'.dim;
             const serverActionColored = row[4] ? '✓ use server'.blue : '×'.dim;
-            const dynamicColored = row[5] ? row[5].yellow : '-'.dim;
-            const revalidateColored = row[6] ? `${row[6]}s`.cyan : '-'.dim;
-            const fetchCacheColored = row[7] ? row[7].magenta : '-'.dim;
-            table.push([row[0], routeColored, typeColored, metadataColored, serverActionColored, dynamicColored, revalidateColored, fetchCacheColored]);
+            const dynamicColored = row[5] ? row[5].yellow : '×'.dim;
+            const revalidateColored = row[6] ? `${row[6]}s`.cyan : '×'.dim;
+            const fetchCacheColored = row[7] ? row[7].magenta : '×'.dim;
+            const parallelColored = row[8] ? `= parallel`.orange : '×'.dim;
+            const interceptingColored = row[9] ? `⇥ intercepting`.green : '×'.dim;
+            const loadingColored = row[10] ? `○ loading`.cyan : '×'.dim;
+            const errorColored = row[11] ? `⌀ error`.red : '×'.dim;
+            table.push([row[0], routeColored, typeColored, metadataColored, serverActionColored, dynamicColored, revalidateColored, fetchCacheColored, parallelColored, interceptingColored, loadingColored, errorColored]);
         } else {
             const methodColored = formatMethod(row[0]);
-            const route = row[2].replace(/\[(\w+)\]/g, '[$1]'.yellow)
+            const route = row[2].replace(/\[\.\.\.(\w+)\]/g, '[...$1]'.magenta)
+                .replace(/\[(\w+)\]/g, '[$1]'.yellow)
                 .replace(/\((\w+)\)/g, '($1)'.blue);
             const routeColored = showFullPath ? `${baseUrl.dim}${route}` : route;
             table.push([methodColored, routeColored]);
         }
     });
-
     console.log(table.toString());
 }
 
