@@ -23,17 +23,25 @@ A command-line utility to explore and visualize all routes in your Next.js appli
 
 ![next-list CLI output](https://i.postimg.cc/pX7bq9yF/Screenshot-2024-12-04-at-1-27-32-AM.png)
 
-## Installation 📦
+## Installation & Usage 📦
+
+### Option 1: Run directly with npx (no installation required)
+
+```bash
+npx next-list [pages|api] [--full|-f]
+```
+
+### Option 2: Global installation
+
+```bash
+npm install -g next-list
+next-list [pages|api] [--full|-f]
+```
+
+### Option 3: Local installation
 
 ```bash
 npm install next-list
-```
-
-## Usage 🚀
-
-To use `next-list`, you can run the provided npm script from your project root with optional arguments:
-
-```bash
 npm run list [pages|api] [--full|-f]
 ```
 

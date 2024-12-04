@@ -6,7 +6,14 @@ const Table = require('cli-table3');
 
 const appDirectory = fs.existsSync(path.join(process.cwd(), 'app'))
     ? path.join(process.cwd(), 'app')
-    : path.join(process.cwd(), 'src/app');
+    : fs.existsSync(path.join(process.cwd(), 'src/app'))
+        ? path.join(process.cwd(), 'src/app')
+        : null;
+
+if (!appDirectory) {
+    console.error('🚫 This tool only works with projects using an "app" directory.'.yellow);
+    process.exit(1);
+}
 
 function hasMetadata(filePath) {
     const fileContent = fs.readFileSync(filePath, 'utf8');
