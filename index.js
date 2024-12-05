@@ -49,17 +49,18 @@ if (!appDirectory) {
 function hasMetadata(filePath) {
     const fileContent = fs.readFileSync(filePath, 'utf8');
     const metadataPatterns = [
-        'export const metadata',
-        'export async function generateMetadata',
-        'export function generateMetadata',
-        'export const generateMetadata',
-        'export let metadata',
-        'export var metadata',
-        'export const metadata:',
-        'export const generateMetadata:',
+        { pattern: 'export const metadata', returnVal: '✓ metadata'.green },
+        { pattern: 'export async function generateMetadata', returnVal: '○ generateMetadata'.blue },
+        { pattern: 'export function generateMetadata', returnVal: '○ generateMetadata'.blue },
+        { pattern: 'export const generateMetadata', returnVal: '○ generateMetadata'.blue },
+        { pattern: 'export let metadata', returnVal: '✓ metadata'.green },
+        { pattern: 'export var metadata', returnVal: '✓ metadata'.green },
+        { pattern: 'export const metadata:', returnVal: '✓ metadata'.green },
+        { pattern: 'export const generateMetadata:', returnVal: '○ generateMetadata'.blue },
     ];
 
-    return metadataPatterns.some(pattern => fileContent.includes(pattern));
+    const found = metadataPatterns.find(({ pattern }) => fileContent.includes(pattern));
+    return found ? found.returnVal : null;
 }
 
 function hasServerAction(filePath) {
@@ -208,7 +209,7 @@ function renderTable(tableData, type = 'pages') {
                 .replace(/@(\w+)/g, '@$1'.orange);
             const routeColored = showFullPath ? `${baseUrl.dim}${route}` : route;
             const typeColored = row[2] === 'use client' ? '⇢ use client'.red : '⇠ server'.dim;
-            const metadataColored = row[3] ? '✓ metadata'.green : '×'.dim;
+            const metadataColored = row[3] ? row[3] : '×'.dim;
             const serverActionColored = row[4] ? '✓ use server'.blue : '×'.dim;
             const dynamicColored = row[5] ? row[5].yellow : '×'.dim;
             const revalidateColored = row[6] ? `${row[6]}s`.cyan : '×'.dim;

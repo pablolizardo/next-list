@@ -17,7 +17,7 @@ A command-line utility to explore and visualize all routes in your Next.js appli
 - 📝 Shows the exported function names for each route
 - 🔍 Supports dynamic routes (`[param]`) and optional segments (`(param)`)
 - 📊 Beautiful CLI table output with full URLs
-- 🔄 Detects and displays metadata exports
+- 🔄 Detects and displays metadata exports, returning either `"metadata"` or `"generateMetadata"`
 - ⚡ Identifies client/server components
 - 🔒 Shows server actions usage
 - ⏱️ Displays revalidation settings
