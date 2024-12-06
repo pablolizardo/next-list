@@ -4,6 +4,13 @@ const path = require('path');
 const Table = require('cli-table3');
 console.clear()
 
+const FILE_PATTERNS = {
+    PAGE: 'page.tsx',
+    ROUTE: 'route.ts',
+    LOADING: 'loading.tsx',
+    ERROR: 'error.tsx'
+};
+
 const colorCodes = {
     green: '\x1b[32m',
     blue: '\x1b[34m',
@@ -46,8 +53,31 @@ if (!appDirectory) {
     process.exit(1);
 }
 
-function hasMetadata(filePath) {
-    const fileContent = fs.readFileSync(filePath, 'utf8');
+const fileContentsCache = new Map();
+
+let currentFilePath = null;
+let currentFileContent = null;
+
+function setCurrentFile(filePath) {
+    currentFilePath = filePath;
+    currentFileContent = fileContentsCache.has(filePath)
+        ? fileContentsCache.get(filePath)
+        : fs.readFileSync(filePath, 'utf8');
+    fileContentsCache.set(filePath, currentFileContent);
+}
+
+function cleanup() {
+    fileContentsCache.clear();
+}
+
+// Add process event handlers
+process.on('exit', cleanup);
+process.on('SIGINT', () => {
+    cleanup();
+    process.exit();
+});
+
+function hasMetadata() {
     const metadataPatterns = [
         { pattern: 'export const metadata', returnVal: '✓ metadata'.green },
         { pattern: 'export async function generateMetadata', returnVal: '○ generateMetadata'.blue },
@@ -59,73 +89,75 @@ function hasMetadata(filePath) {
         { pattern: 'export const generateMetadata:', returnVal: '○ generateMetadata'.blue },
     ];
 
-    const found = metadataPatterns.find(({ pattern }) => fileContent.includes(pattern));
+    const found = metadataPatterns.find(({ pattern }) => currentFileContent.includes(pattern));
     return found ? found.returnVal : null;
 }
 
-function hasServerAction(filePath) {
-    const fileContent = fs.readFileSync(filePath, 'utf8');
-    return fileContent.includes('use server');
+function hasServerAction() {
+    return currentFileContent.includes('use server');
 }
 
-function extractDynamicValue(filePath) {
-    const fileContent = fs.readFileSync(filePath, 'utf8');
-    const match = fileContent.match(/export (?:const|let|var) dynamic\s*=\s*['"]([^'"]+)['"]/);
+function extractDynamicValue() {
+    const match = currentFileContent.match(/export (?:const|let|var) dynamic\s*=\s*['"]([^'"]+)['"]/);
     return match ? match[1] : '';
 }
 
-function extractRevalidateValue(filePath) {
-    const fileContent = fs.readFileSync(filePath, 'utf8');
-    const match = fileContent.match(/export (?:const|let|var) revalidate\s*=\s*(\d+)/);
+function extractRevalidateValue() {
+    const match = currentFileContent.match(/export (?:const|let|var) revalidate\s*=\s*(\d+)/);
     return match ? match[1] : '';
 }
 
-function extractFetchCacheValue(filePath) {
-    const fileContent = fs.readFileSync(filePath, 'utf8');
-    const match = fileContent.match(/export (?:const|let|var) fetchCache\s*=\s*['"]([^'"]+)['"]/);
+function extractFetchCacheValue() {
+    const match = currentFileContent.match(/export (?:const|let|var) fetchCache\s*=\s*['"]([^'"]+)['"]/);
     return match ? match[1] : '';
 }
 
-function hasParallelRoute(filePath) {
-    return filePath.includes('@');
+function hasParallelRoute() {
+    return currentFilePath.includes('@');
 }
 
-function hasInterceptingRoute(filePath) {
-    return filePath.includes('(.)') || filePath.includes('(..)') || filePath.includes('(...)');
+function hasInterceptingRoute() {
+    return currentFilePath.includes('(.)') || currentFilePath.includes('(..)') || currentFilePath.includes('(...)');
 }
 
-function hasLoadingFile(dirPath) {
-    const directory = path.dirname(dirPath);
-    return fs.existsSync(path.join(directory, 'loading.tsx'));
+function hasLoadingFile() {
+    const directory = path.dirname(currentFilePath);
+    return fs.existsSync(path.join(directory, FILE_PATTERNS.LOADING));
 }
 
-function hasErrorFile(dirPath) {
-    const directory = path.dirname(dirPath);
-    return fs.existsSync(path.join(directory, 'error.tsx'));
+function hasErrorFile() {
+    const directory = path.dirname(currentFilePath);
+    return fs.existsSync(path.join(directory, FILE_PATTERNS.ERROR));
 }
 
 function listRoutes(dir, baseRoute = '') {
     let table = [];
-    fs.readdirSync(dir, { withFileTypes: true }).forEach(dirent => {
-        const fullPath = path.join(dir, dirent.name);
-        if (dirent.isDirectory() && !dirent.name.startsWith('_')) {
-            table = table.concat(listRoutes(fullPath, `${baseRoute}/${dirent.name}`));
-        } else if (dirent.isFile() && dirent.name.endsWith('page.tsx')) {
-            const route = `${baseRoute}/${dirent.name.replace(/page\.tsx$/, '')}`;
-            const functionName = extractExportedFunction(fullPath);
-            const componentType = isClientComponent(fullPath) ? 'use client' : '';
-            const hasMetadataExport = hasMetadata(fullPath);
-            const hasServerActionDirective = hasServerAction(fullPath);
-            const dynamicValue = extractDynamicValue(fullPath);
-            const revalidateValue = extractRevalidateValue(fullPath);
-            const fetchCacheValue = extractFetchCacheValue(fullPath);
-            const isParallel = hasParallelRoute(fullPath);
-            const isIntercepting = hasInterceptingRoute(fullPath);
-            const _hasLoadingFile = hasLoadingFile(fullPath);
-            const _hasErrorFile = hasErrorFile(fullPath);
-            table.push([functionName, route, componentType, hasMetadataExport, hasServerActionDirective, dynamicValue, revalidateValue, fetchCacheValue, isParallel, isIntercepting, _hasLoadingFile, _hasErrorFile]);
-        }
-    });
+    try {
+        fs.readdirSync(dir, { withFileTypes: true }).forEach(dirent => {
+            const fullPath = path.join(dir, dirent.name);
+            if (dirent.isDirectory() && !dirent.name.startsWith('_')) {
+                table = table.concat(listRoutes(fullPath, `${baseRoute}/${dirent.name}`));
+            } else if (dirent.isFile() && dirent.name === FILE_PATTERNS.PAGE) {
+                setCurrentFile(fullPath);
+
+                const route = `${baseRoute}/${dirent.name.replace(/page\.tsx$/, '')}`;
+                const functionName = extractExportedFunction();
+                const componentType = isClientComponent() ? 'use client' : '';
+                const hasMetadataExport = hasMetadata();
+                const hasServerActionDirective = hasServerAction();
+                const dynamicValue = extractDynamicValue();
+                const revalidateValue = extractRevalidateValue();
+                const fetchCacheValue = extractFetchCacheValue();
+                const isParallel = hasParallelRoute();
+                const isIntercepting = hasInterceptingRoute();
+                const _hasLoadingFile = hasLoadingFile();
+                const _hasErrorFile = hasErrorFile();
+                table.push([functionName, route, componentType, hasMetadataExport, hasServerActionDirective, dynamicValue, revalidateValue, fetchCacheValue, isParallel, isIntercepting, _hasLoadingFile, _hasErrorFile]);
+            }
+        });
+    } catch (error) {
+        console.error(`Error reading directory ${dir}:`.red, error.message);
+    }
     return table;
 }
 
@@ -135,10 +167,12 @@ function listApiRoutes(dir, baseRoute = '') {
         const fullPath = path.join(dir, dirent.name);
         if (dirent.isDirectory() && !dirent.name.startsWith('_')) {
             table = table.concat(listApiRoutes(fullPath, `${baseRoute}/${dirent.name}`));
-        } else if (dirent.isFile() && dirent.name === 'route.ts') {
+        } else if (dirent.isFile() && dirent.name === FILE_PATTERNS.ROUTE) {
+            setCurrentFile(fullPath);
+
             const route = `${baseRoute}/route`;
-            const methods = extractHttpMethods(fullPath);
-            const functionName = extractExportedFunction(fullPath);
+            const methods = extractHttpMethods();
+            const functionName = extractExportedFunction();
             methods.forEach(method => {
                 table.push([method, functionName, route]);
             });
@@ -147,25 +181,39 @@ function listApiRoutes(dir, baseRoute = '') {
     return table;
 }
 
-function extractHttpMethods(filePath) {
-    const fileContent = fs.readFileSync(filePath, 'utf8');
+function extractHttpMethods() {
     const methods = [];
     const methodPatterns = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS', 'HEAD'];
+
+    // Check for destructured handlers pattern
+    const handlersMatch = currentFileContent.match(/export const \{([^}]+)\}\s*=\s*handlers/);
+    if (handlersMatch) {
+        const destructuredMethods = handlersMatch[1].split(',').map(m => m.trim());
+        return [destructuredMethods.join(' | ')];
+    }
+
+    // Check for individual async function exports
     methodPatterns.forEach(method => {
-        if (fileContent.includes(`export async function ${method}`) || fileContent.includes(`export const { ${method} } = handlers`)) {
+        if (currentFileContent.includes(`export async function ${method}`)) {
             methods.push(method);
         }
     });
+
     return methods.length > 0 ? methods : ['GET'];
 }
 
-function extractExportedFunction(filePath) {
-    const fileContent = fs.readFileSync(filePath, 'utf8');
-    const match = fileContent.match(/export default (async function )?(\w+)/) || fileContent.match(/export default (\w+)/);
+function extractExportedFunction() {
+    const match = currentFileContent.match(/export default (async function )?(\w+)/) || currentFileContent.match(/export default (\w+)/);
     return match ? match[2] || match[1] : '';
 }
 
 function formatMethod(method) {
+    if (method.includes('|')) {
+        return method.split('|')
+            .map(m => formatMethod(m.trim())) // Recursively format each method
+            .join(' | '.dim); // Add dimmed separator
+    }
+
     switch (method) {
         case 'GET':
             return method.green;
@@ -177,6 +225,10 @@ function formatMethod(method) {
             return method.gray;
         case 'PUT':
             return method.violet;
+        case 'PATCH':
+            return method.yellow;
+        case 'OPTIONS':
+            return method.cyan;
         default:
             return method;
     }
@@ -231,9 +283,8 @@ function renderTable(tableData, type = 'pages') {
     console.log(table.toString());
 }
 
-function isClientComponent(filePath) {
-    const fileContent = fs.readFileSync(filePath, 'utf8');
-    return fileContent.includes('use client');
+function isClientComponent() {
+    return currentFileContent.includes('use client');
 }
 
 console.log('Listing routes in src/app:');

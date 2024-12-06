@@ -5,6 +5,10 @@
 
 A command-line utility to explore and visualize all routes in your Next.js application, including both pages and API routes. This tool aims to simplify debugging when working in the Next.js app directory and to provide clear insights into which routes are being rendered, both for pages and API routes. Inspired by the `php artisan route:list` command.
 
+## Screenshots 📸
+
+![next-list CLI output](https://i.postimg.cc/Yq2YtVgQ/Screenshot-2024-12-04-at-3-12-27-PM.png)
+
 ## Features ✨
 
 - 📋 Lists all page routes and API routes in your Next.js app
@@ -23,10 +27,10 @@ A command-line utility to explore and visualize all routes in your Next.js appli
 - ⏱️ Displays revalidation settings
 - 💾 Shows fetch cache configurations
 - 🔄 Dynamic route configurations
-
-## Screenshots 📸
-
-![next-list CLI output](https://i.postimg.cc/Yq2YtVgQ/Screenshot-2024-12-04-at-3-12-27-PM.png)
+- 🚦 Color-coded HTTP methods in API routes
+- ⚡ Performance optimizations with file content caching
+- 📂 Support for loading.tsx and error.tsx detection
+- 🔄 Improved API route method detection (including destructured handlers)
 
 ## Installation & Usage 📦
 
@@ -61,24 +65,31 @@ Options:
 1. **Page Routes Table:**
 
 ```
-| Function Name | Route                    | Type      | Metadata | Server Action | Dynamic | Revalidate | FetchCache |
-|---------------|--------------------------|-----------|----------|---------------|---------|------------|------------|
-| HomePage      | /                        | ⇢ client  | ✓        | ×             | -       | 30s        | force-cache|
-| AboutPage     | /about                   | ⇠ server  | ✓        | ✓             | auto    | -          | -          |
-| UserProfile   | /users/[id]              | ⇢ client  | ✓        | ×             | -       | -          | -          |
-| Settings      | /@modal/settings         | ⇠ server  | ×        | ✓             | -       | -          | -          |
-| EditPhoto     | /photos/(.)edit          | ⇢ client  | ×        | ✓             | -       | -          | -          |
+| Function Name | Route                    | Type      | Metadata | Server Action | Dynamic | Revalidate | FetchCache | Loading | Error |
+|---------------|--------------------------|-----------|----------|---------------|---------|------------|------------|---------|-------|
+| HomePage      | /                        | ⇢ client  | ✓        | ×             | -       | 30s        | force-cache| ○       | ⌀     |
+| AboutPage     | /about                   | ⇠ server  | ✓        | ✓             | auto    | -          | -          | ○       | ×     |
+| UserProfile   | /users/[id]              | ⇢ client  | ✓        | ×             | -       | -          | -          | ×       | ⌀     |
+| Settings      | /@modal/settings         | ⇠ server  | ×        | ✓             | -       | -          | -          | ○       | ×     |
+| EditPhoto     | /photos/(.)edit          | ⇢ client  | ×        | ✓             | -       | -          | -          | ×       | ×     |
 ```
 
 2. **API Routes Table:**
 
 ```
-| Method | Route                         |
-|--------|-------------------------------|
-| GET    | /api/users                    |
-| POST   | /api/users                    |
-| DELETE | /api/users/[id]               |
+| Method            | Route                         |
+|-------------------|-------------------------------|
+| GET | POST        | /api/users                    |
+| DELETE           | /api/users/[id]               |
+| GET | PUT | PATCH | /api/items                    |
 ```
+
+## Performance Improvements 🚀
+
+- File content caching to reduce disk I/O operations
+- Optimized route parsing with improved regex patterns
+- Memory cleanup on process exit
+- Efficient handling of destructured API route methods
 
 ## Contributing 🤝
 
