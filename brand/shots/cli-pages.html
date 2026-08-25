@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>next-list pages</title>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    html, body { margin: 0; background: #0b0e0a; }
+    .window {
+      width: 1080px;
+      margin: 40px auto;
+      background: #10140f;
+      border: 1px solid #2a3326;
+      border-radius: 14px;
+      overflow: hidden;
+      font-family: "IBM Plex Mono", monospace;
+      color: #ede6d2;
+      box-shadow: 0 30px 80px rgba(0,0,0,.45);
+    }
+    .bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 16px;
+      background: #161c14;
+      border-bottom: 1px solid #2a3326;
+      color: #8a9080;
+      font-size: 12px;
+    }
+    .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .r { background: #ff5c5c; } .y { background: #f5c542; } .g { background: #3ddc97; }
+    .body { padding: 22px 24px 28px; font-size: 13px; line-height: 1.55; }
+    .hdr { color: #d6ff3f; }
+    .dim { color: #8a9080; }
+    .client { color: #ff5c5c; }
+    .meta { color: #3ddc97; }
+    .gen { color: #67e8f9; }
+    .dyn { color: #f5c542; }
+    .catch { color: #e879f9; }
+    .load { color: #67e8f9; }
+    .err { color: #ff5c5c; }
+    .lime { color: #d6ff3f; }
+    .orange { color: #fb923c; }
+    .pink { color: #f472b6; }
+    .blue { color: #60a5fa; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th { text-align: left; color: #8a9080; font-weight: 400; padding: 6px 10px; border-bottom: 1px solid #2a3326; }
+    td { padding: 6px 10px; border-bottom: 1px solid #1c2419; vertical-align: top; white-space: nowrap; }
+    h3 { margin: 22px 0 0; font-size: 13px; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <div class="window">
+    <div class="bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span> npx next-list</div>
+    <div class="body">
+      <div><span class="hdr">next-list</span> <span class="dim">2.0.0  ·  app  ·  9 pages  ·  4 handlers  ·  1 parallel  ·  1 intercepting</span></div>
+      <h3>Pages  <span class="dim">9</span></h3>
+      <table>
+        <tr><th>Function</th><th>Route</th><th>Type</th><th>Metadata</th><th>Flags</th></tr>
+        <tr><td>HomePage</td><td>/</td><td class="dim">server</td><td class="meta">metadata</td><td><span class="load">loading</span> <span class="err">error</span></td></tr>
+        <tr><td>AboutPage</td><td>/about</td><td class="client">client</td><td class="dim">·</td><td class="dim">·</td></tr>
+        <tr><td>BlogPost</td><td>/blog/<span class="dyn">[slug]</span></td><td class="dim">server</td><td class="gen">generateMetadata</td><td class="dim">·</td></tr>
+        <tr><td>CalendarPage</td><td>/championships/<span class="dyn">[legacyUrl]</span>/calendar</td><td class="dim">server</td><td class="dim">·</td><td class="dim">·</td></tr>
+        <tr><td>SettingsPage</td><td>/dashboard/settings</td><td class="dim">server</td><td class="dim">·</td><td><span class="load">loading</span> <span class="blue">action</span></td></tr>
+        <tr><td>DocsPage</td><td>/docs/<span class="catch">[[...slug]]</span></td><td class="dim">server</td><td class="dim">·</td><td class="lime">cache</td></tr>
+        <tr><td>PhotoModal</td><td>/photos/photo/<span class="dyn">[id]</span></td><td class="dim">server</td><td class="dim">·</td><td><span class="orange">@modal</span> <span class="pink">(.)</span></td></tr>
+        <tr><td>ShopPage</td><td>/shop/<span class="catch">[...slug]</span></td><td class="dim">server</td><td class="dim">·</td><td class="dim">·</td></tr>
+      </table>
+    </div>
+  </div>
+</body>
+</html>

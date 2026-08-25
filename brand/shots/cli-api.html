@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>next-list api</title>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    html, body { margin: 0; background: #0b0e0a; }
+    .window {
+      width: 920px;
+      margin: 40px auto;
+      background: #10140f;
+      border: 1px solid #2a3326;
+      border-radius: 14px;
+      overflow: hidden;
+      font-family: "IBM Plex Mono", monospace;
+      color: #ede6d2;
+      box-shadow: 0 30px 80px rgba(0,0,0,.45);
+    }
+    .bar { display:flex; align-items:center; gap:8px; padding:14px 16px; background:#161c14; border-bottom:1px solid #2a3326; color:#8a9080; font-size:12px; }
+    .dot { width:10px; height:10px; border-radius:50%; }
+    .r { background:#ff5c5c; } .y { background:#f5c542; } .g { background:#3ddc97; }
+    .body { padding: 22px 24px 28px; font-size: 13px; line-height: 1.55; }
+    .hdr { color: #d6ff3f; } .dim { color: #8a9080; }
+    .get { color:#3ddc97; } .post { color:#60a5fa; } .put { color:#e879f9; } .patch { color:#f5c542; } .del { color:#ff5c5c; }
+    .dyn { color:#f5c542; } .catch { color:#e879f9; } .edge { color:#f5c542; }
+    table { width:100%; border-collapse:collapse; margin-top:10px; }
+    th { text-align:left; color:#8a9080; font-weight:400; padding:6px 10px; border-bottom:1px solid #2a3326; }
+    td { padding:7px 10px; border-bottom:1px solid #1c2419; }
+  </style>
+</head>
+<body>
+  <div class="window">
+    <div class="bar"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span> npx next-list api</div>
+    <div class="body">
+      <div><span class="hdr">next-list</span> <span class="dim">2.0.0  ·  app  ·  4 handlers  ·  9 methods</span></div>
+      <table>
+        <tr><th>Methods</th><th>Route</th><th>Runtime</th></tr>
+        <tr><td><span class="get">GET</span> · <span class="post">POST</span></td><td>/api/auth/<span class="catch">[...nextauth]</span></td><td class="dim">nodejs</td></tr>
+        <tr><td><span class="get">GET</span></td><td>/api/health</td><td class="edge">edge</td></tr>
+        <tr><td><span class="get">GET</span> · <span class="post">POST</span></td><td>/api/users</td><td class="dim">nodejs</td></tr>
+        <tr><td><span class="get">GET</span> · <span class="put">PUT</span> · <span class="patch">PATCH</span> · <span class="del">DELETE</span></td><td>/api/users/<span class="dyn">[id]</span></td><td class="dim">nodejs</td></tr>
+      </table>
+    </div>
+  </div>
+</body>
+</html>

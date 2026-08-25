@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 96" role="img" aria-label="next-list">
+  <rect width="520" height="96" fill="#10140F"/>
+  <g transform="translate(12,16)">
+    <rect width="64" height="64" rx="14" fill="#1A2118"/>
+    <rect x="14" y="18" width="28" height="6" rx="3" fill="#6B7263"/>
+    <rect x="14" y="29" width="36" height="8" rx="4" fill="#D6FF3F"/>
+    <rect x="14" y="42" width="22" height="6" rx="3" fill="#6B7263"/>
+    <path d="M46 14h8v8l-4 3-4-3z" fill="#C45C26"/>
+  </g>
+  <text x="96" y="62" font-family="Georgia, 'Times New Roman', serif" font-size="42" fill="#EDE6D2">next-list</text>
+  <rect x="96" y="74" width="72" height="4" fill="#D6FF3F"/>
+</svg>

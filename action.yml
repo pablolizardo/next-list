@@ -1,0 +1,47 @@
+name: next-list
+description: List Next.js App Router pages, route handlers and special files in CI
+author: Pablo Lizardo
+branding:
+  icon: list
+  color: green
+inputs:
+  project-path:
+    description: Path to the Next.js project
+    required: false
+    default: '.'
+  comment:
+    description: Post or update a sticky PR comment with the route table
+    required: false
+    default: 'false'
+  filter:
+    description: Only include routes whose URL or file contains this string
+    required: false
+    default: ''
+  groups:
+    description: Keep (route-groups) in displayed paths
+    required: false
+    default: 'false'
+  github-token:
+    description: Token used to post PR comments
+    required: false
+    default: ${{ github.token }}
+outputs:
+  pages:
+    description: Number of page routes
+    value: ${{ steps.run.outputs.pages }}
+  api:
+    description: Number of route handlers
+    value: ${{ steps.run.outputs.api }}
+runs:
+  using: composite
+  steps:
+    - id: run
+      name: List Next.js routes
+      shell: bash
+      env:
+        INPUT_PROJECT_PATH: ${{ inputs.project-path }}
+        INPUT_COMMENT: ${{ inputs.comment }}
+        INPUT_FILTER: ${{ inputs.filter }}
+        INPUT_GROUPS: ${{ inputs.groups }}
+        INPUT_GITHUB_TOKEN: ${{ inputs.github-token }}
+      run: node "$GITHUB_ACTION_PATH/action.js"

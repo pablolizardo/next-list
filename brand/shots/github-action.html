@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>next-list action</title>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif&display=swap" rel="stylesheet" />
+  <style>
+    html, body { margin: 0; background: #0b0e0a; }
+    .card {
+      width: 880px;
+      margin: 40px auto;
+      background: #161c14;
+      border: 1px solid #2a3326;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 30px 80px rgba(0,0,0,.45);
+      font-family: "IBM Plex Mono", monospace;
+      color: #ede6d2;
+    }
+    .head { padding: 22px 28px 8px; }
+    h1 { font-family: "Instrument Serif", serif; font-size: 28px; margin: 0 0 6px; font-weight: 400; }
+    .meta { color: #8a9080; font-size: 12px; }
+    pre { margin: 16px 28px 28px; padding: 18px; background: #10140f; border-radius: 10px; font-size: 13px; line-height: 1.55; }
+    .g { color: #3ddc97; } .c { color: #8a9080; } .s { color: #d6ff3f; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="head">
+      <h1>GitHub Action</h1>
+      <div class="meta">Sticky PR comment · job summary · JSON counts</div>
+    </div>
+    <pre><span class="c"># .github/workflows/routes.yml</span>
+- <span class="g">uses</span>: pablolizardo/next-list@v2
+  <span class="g">with</span>:
+    <span class="s">comment</span>: true</pre>
+  </div>
+</body>
+</html>

@@ -1,14 +1,29 @@
 {
   "name": "next-list",
-  "version": "1.0.18",
-  "description": "A package to render tables in CLI for Next.js routes visualization.",
-  "main": "index.js",
-  "bin": {
-    "next-list": "./index.js"
+  "version": "2.0.0",
+  "description": "artisan route:list for Next.js — inspect App Router pages, route handlers and special files from the terminal.",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js"
   },
+  "bin": {
+    "next-list": "bin/next-list.js"
+  },
+  "files": [
+    "bin",
+    "lib",
+    "action.js",
+    "action.yml",
+    "LICENSE",
+    "README.md"
+  ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "start": "node bin/next-list.js --dir fixtures/demo-app",
+    "test": "node --test test/*.test.js",
+    "list": "node bin/next-list.js",
+    "list:demo": "node bin/next-list.js --dir fixtures/demo-app --stats",
+    "list:md": "node bin/next-list.js --dir fixtures/demo-app --md",
+    "screenshots": "bash scripts/capture-screenshots.sh"
   },
   "repository": {
     "type": "git",
@@ -18,27 +33,27 @@
     "next.js",
     "next",
     "nextjs",
+    "app-router",
     "routes",
     "cli",
     "tool",
     "visualization",
     "debugging",
     "api",
-    "pages",
-    "route visualization",
-    "development tools"
+    "github-action",
+    "route-list"
   ],
   "author": {
     "name": "Pablo Lizardo",
     "email": "info@pablolizardo.dev",
     "url": "https://www.pablolizardo.dev"
   },
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "cli-table3": "^0.6.0"
   },
   "engines": {
-    "node": ">=14.0.0"
+    "node": ">=18"
   },
   "bugs": {
     "url": "https://github.com/pablolizardo/next-list/issues"

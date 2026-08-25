@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>next-list brand kit</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #10140f;
+      --ink-2: #1a2118;
+      --paper: #ede6d2;
+      --lime: #d6ff3f;
+      --copper: #c45c26;
+      --muted: #8a9080;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; background: var(--ink); color: var(--paper); }
+    body { font-family: "IBM Plex Mono", monospace; }
+    .hero {
+      min-height: 100vh;
+      padding: 72px 80px;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 64px;
+      align-items: end;
+      background:
+        radial-gradient(1200px 500px at 80% -10%, #1f2a18 0%, transparent 60%),
+        var(--ink);
+    }
+    .kicker {
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      font-size: 11px;
+      color: var(--lime);
+      margin-bottom: 28px;
+    }
+    h1 {
+      font-family: "Instrument Serif", serif;
+      font-size: 112px;
+      line-height: 0.86;
+      font-weight: 400;
+      margin: 0 0 28px;
+    }
+    h1 em { font-style: italic; color: var(--lime); }
+    .rule { width: 88px; height: 5px; background: var(--lime); margin-bottom: 28px; }
+    .lede { font-size: 16px; max-width: 34em; color: var(--muted); line-height: 1.55; }
+    .mark-card {
+      background: var(--ink-2);
+      border: 1px solid #2a3326;
+      padding: 36px;
+      display: grid;
+      justify-items: center;
+      gap: 18px;
+    }
+    .mark-card img { width: 220px; height: 220px; }
+    .caption { font-size: 12px; color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase; }
+    .sheet {
+      background: var(--paper);
+      color: var(--ink);
+      padding: 72px 80px 96px;
+    }
+    h2 {
+      font-family: "Instrument Serif", serif;
+      font-size: 42px;
+      margin: 0 0 36px;
+      font-weight: 400;
+    }
+    .swatches { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-bottom: 64px; }
+    .swatch { min-height: 140px; padding: 16px; display: flex; flex-direction: column; justify-content: space-between; }
+    .swatch span { font-size: 12px; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+    .type-sample { font-family: "Instrument Serif", serif; font-size: 56px; line-height: 1; }
+    .mono-sample { font-size: 14px; line-height: 1.7; }
+    .lime { background: var(--lime); }
+    .ink { background: var(--ink); color: var(--paper); }
+    .paper { background: #d9d0b8; }
+    .copper { background: var(--copper); color: var(--paper); }
+    .muted { background: #6b7263; color: var(--paper); }
+  </style>
+</head>
+<body>
+  <section class="hero">
+    <div>
+      <div class="kicker">Brand kit · v2.0</div>
+      <h1>next-<em>list</em></h1>
+      <div class="rule"></div>
+      <p class="lede">artisan route:list for Next.js. A surveyor’s notebook for the App Router — pages, handlers, proxy, intercepts — laid out as a color-coded map.</p>
+    </div>
+    <div class="mark-card">
+      <img src="./mark.jpg" alt="next-list mark" />
+      <div class="caption">Mark · 1:1 · ink + lime</div>
+    </div>
+  </section>
+  <section class="sheet">
+    <h2>Palette</h2>
+    <div class="swatches">
+      <div class="swatch ink"><span>Ink</span><span>#10140F</span></div>
+      <div class="swatch paper"><span>Paper</span><span>#EDE6D2</span></div>
+      <div class="swatch lime"><span>Lime</span><span>#D6FF3F</span></div>
+      <div class="swatch copper"><span>Copper</span><span>#C45C26</span></div>
+      <div class="swatch muted"><span>Stone</span><span>#6B7263</span></div>
+    </div>
+    <div class="grid-2">
+      <div>
+        <h2>Display</h2>
+        <div class="type-sample">Instrument Serif</div>
+      </div>
+      <div>
+        <h2>Command</h2>
+        <p class="mono-sample">$ npx next-list<br />GET · POST &nbsp; /api/users<br />/blog/<span style="background:#d6ff3f">[slug]</span></p>
+      </div>
+    </div>
+  </section>
+</body>
+</html>
